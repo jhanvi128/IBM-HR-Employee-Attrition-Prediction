@@ -1,0 +1,44 @@
+1. data:
+This is your Pandas DataFrame, which contains your dataset.
+
+head():
+This is a function that fetches and displays the first few rows from the DataFrame for quick viewing.
+
+2. data.isnull():
+This function checks every value in the DataFrame to see if it is NaN (Not a Number) or null.
+It returns a DataFrame of the same shape as data, where each entry is either True (if the value is NaN) or False (if it is not NaN).
+
+.sum():
+This is used to sum the number of True values in each column, since True is equivalent to 1 and False is equivalent to 0 in Python.
+Applying .sum() to the result of data.isnull() provides the count of NaN values in each column.
+
+3. data.groupby(['Age', 'Attrition']):
+This groups the data based on the values in the Age and Attrition columns.
+Age: Refers to the age of employees.
+Attrition: Refers to whether the employee has left the organization (Yes) or is still there (No).
+Grouping by both Age and Attrition means the data will be organized into groups where each combination of age and attrition status is treated as a separate group.
+
+-> .apply(lambda x:x['DailyRate'].count()):
+This applies a lambda function (an anonymous function) to each group created in the previous step.
+The function lambda x: x['DailyRate'].count() counts the number of rows in each group by counting the occurrences of the DailyRate column.
+DailyRate: This likely represents an employee's daily salary, but in this context, it's used just as a column to count how many employees fall into each age and attrition group.
+
+-> .reset_index(name='Counts'):
+After performing the group-wise counting, the result is still indexed by Age and Attrition (the group-by columns).
+reset_index() resets the index and converts it back into columns, creating a new DataFrame with the counts.
+The name='Counts' argument renames the newly created column of counts as 'Counts'.
+So, after this step, you'll have a DataFrame with three columns: Age, Attrition, and Counts, where Counts indicates the number of employees in each combination of Age and Attrition.
+
+-> px.line(age_att, x='Age', y='Counts', color='Attrition', title='Agewise Counts of People in an Organization'):
+This uses Plotly Express (px), a library for creating simple and interactive visualizations.
+age_att: The DataFrame containing the grouped data with counts (from the previous step).
+x='Age': Specifies that the x-axis of the line plot will represent the age of the employees.
+y='Counts': Specifies that the y-axis will represent the number of employees (the counts).
+color='Attrition': This colors the lines on the plot based on the Attrition column, allowing you to visually distinguish between employees who left the organization (Attrition = Yes) and those who stayed (Attrition = No).
+title='Agewise Counts of People in an Organization': This sets the title of the plot.
+
+-> Summary of What the Code Does:
+It groups the data by employee age and whether they have left the organization (attrition status).
+It counts the number of employees in each age and attrition category.
+It creates a new DataFrame that stores these counts.
+It then plots a line chart to visualize the number of employees at different ages and separates the lines based on whether they have left the organization or not.
